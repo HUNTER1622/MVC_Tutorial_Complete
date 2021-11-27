@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MVC_Tutorial_Complete.Models.EmployeeViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<h2>Press Buttons to Get Details</h2>
+<div class="container">
+    <ul class="list-group" style="width:38%">
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <li class="list-group-item"><a class="btn btn-block btn-primary" href="/Database/GetDataById?Empid=@item.EmployeeId">@item.EmpName</a></li>
+            }
+        }
+    </ul>
+</div>
+
+<div class="container">
+    <h2>Go to Form View</h2>
+    <a href="/Database/FormView" class="btn btn-sm btn-danger">Go</a>
+</div>
+
+
+@if (TempData["msg"] != null)
+{
+    <table class="table table-striped">
+        <tr>
+            <th>Employee Id</th>
+            <th>Employee Name </th>
+            <th>Department Id</th>
+            <th>Department Name</th>
+        </tr>
+        <tbody>
+            @{
+                var item = TempData["msg"] as MVC_Tutorial_Complete.Models.EmployeeViewModel;
+                <tr>
+                    <td>@item.EmployeeId</td>
+                    <td>@item.EmpName</td>
+                    <td>@item.DepartmentId</td>
+                    <td>@item.DepartName</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+}
+
+

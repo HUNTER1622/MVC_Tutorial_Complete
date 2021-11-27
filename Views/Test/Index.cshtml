@@ -1,0 +1,89 @@
+﻿@model  IEnumerable<MVC_Tutorial_Complete.Models.Employee>
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+@*<table class="table table-striped">
+        <tr>
+            <th>
+                <h2>String List</h2>
+            </th>
+
+        </tr>
+        <tbody>
+            @if (ViewBag.list != null)
+            {
+                foreach (var item in ViewBag.list)
+                {
+                    <tr>
+                        <td>
+                            @item
+                        </td>
+                    </tr>
+                }
+
+            }
+
+        </tbody>
+    </table>*@
+
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th>
+                EmpId
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Department
+            </th>
+        </tr>
+        <tbody>
+            @*@foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.EmpId
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Department
+                        </td>
+                    </tr>
+
+                }*@
+            @foreach (var item in ViewData["emplist"] as List<MVC_Tutorial_Complete.Models.Employee>)
+            {
+                <tr>
+                    <td>
+                        @item.EmpId
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Department
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+
+</div>
+
+
+@ViewBag.Msg1
+@ViewData["msg2"]
+@TempData["Msg3"]
+
+<a href="/Test/SecondPage">Go to second page</a>
+
