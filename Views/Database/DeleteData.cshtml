@@ -1,0 +1,117 @@
+﻿@model IEnumerable<MVC_Tutorial_Complete.Models.EmployeeViewModel>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<h2>DeleteData</h2>
+
+@Html.Partial("_partialview")
+
+
+<div class="container">
+    @if (Model != null)
+    {
+        <table class="table table-striped" style="width:80%">
+            <tr>
+                <th>Employee Id</th>
+                <th>Employee Name </th>
+                <th>Department Id</th>
+                <th>Department Name</th>
+                <th>Action</th>
+            </tr>
+            <tbody>
+                @{
+
+                    foreach (var item in Model)
+                    {
+                        <tr id="row_@item.EmployeeId">
+                            <td>@item.EmployeeId</td>
+                            <td>@item.EmpName</td>
+                            <td>@item.DepartmentId</td>
+                            <td>@item.DepartName</td>
+                            <td><a href="#" onclick="deleteEmployee(@item.EmployeeId)"><i class="glyphicon glyphicon-trash text-danger"></i></a></td>
+                        </tr>
+                    }
+                    //var item = TempData["msg"] as MVC_Tutorial_Complete.Models.EmployeeViewModel;
+
+                }
+
+            </tbody>
+        </table>
+
+    }
+</div>
+
+<div id="Dmodel" class="modal fade" style="display:none">
+    <div class="modal-dialog">
+        <input type="hidden" id="storedelid"/>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete Employee</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to delete ?</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#/" class="btn btn-success btn-sm" onclick="Myfunction()">Delete</a>
+                <a href="#/" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<a href="#/" class="btn btn-primary btn-lg"  onclick="GetDataById()">GetPartialViewByJquery</a>
+<div id="pview" class="jumbotron">
+    
+</div>
+<script>
+    var deleteEmployee = function (id) {
+        $("#storedelid").val(id);
+        $("#Dmodel").modal("show");
+    }
+    var Myfunction = function () {
+        var value = parseInt($("#storedelid").val());
+        $.ajax({
+            type: "POST",
+            url: "/Database/DeleteEmployeeById",
+            data: { id: value },
+            success: function (response) {
+                if (response.Status) {
+                    $("#Dmodel").modal("hide");
+                    $("#row_" + value).remove();                   
+                    
+                }
+                else {
+                    $("#Dmodel").modal("hide");
+                    
+                }
+            }
+
+
+        })
+    }
+    var GetDataById = function (id) {
+        $.ajax({
+            type: "POST",
+            url: "/Database/GetPartialViewById",
+            //data: { id: id },
+            dataType:'HTML',
+            success: function (response) {
+                debugger;
+                $("#pview").html(response);
+            }
+        })
+
+    }
+    var URL = "/Database/GetPartialViewById";
+    $("#pview").load(URL,function () {
+
+    })
+
+    
+</script>

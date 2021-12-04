@@ -135,56 +135,62 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Departmnet.cs">
-      <DependentUpon>EmployeeModel.tt</DependentUpon>
+      <DependentUpon>ModelEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Employee.cs">
-      <DependentUpon>EmployeeModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\EmployeeModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EmployeeModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\EmployeeModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EmployeeModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\EmployeeModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EmployeeModel.edmx</DependentUpon>
+      <DependentUpon>ModelEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EmployeeViewModel.cs" />
+    <Compile Include="Models\ModelEntity.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelEntity.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ModelEntity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ModelEntity.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelEntity.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Site.cs">
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Method\Methods.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\747.gif" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Rolling square.gif" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\EmployeeModel.Context.tt">
+    <Content Include="Models\ModelEntity.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EmployeeModel.edmx</DependentUpon>
-      <LastGenOutput>EmployeeModel.Context.cs</LastGenOutput>
+      <DependentUpon>ModelEntity.edmx</DependentUpon>
+      <LastGenOutput>ModelEntity.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\EmployeeModel.tt">
+    <Content Include="Models\ModelEntity.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EmployeeModel.edmx</DependentUpon>
-      <LastGenOutput>EmployeeModel.cs</LastGenOutput>
+      <DependentUpon>ModelEntity.edmx</DependentUpon>
+      <LastGenOutput>ModelEntity.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\EmployeeModel.edmx">
+    <EntityDeploy Include="Models\ModelEntity.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EmployeeModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>ModelEntity.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\EmployeeModel.edmx.diagram">
-      <DependentUpon>EmployeeModel.edmx</DependentUpon>
+    <Content Include="Models\ModelEntity.edmx.diagram">
+      <DependentUpon>ModelEntity.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -216,6 +222,8 @@
     <Content Include="Views\Test\ThirdPage.cshtml" />
     <Content Include="Views\Database\Index.cshtml" />
     <Content Include="Views\Database\FormView.cshtml" />
+    <Content Include="Views\Database\DeleteData.cshtml" />
+    <Content Include="Views\Shared\_partialview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

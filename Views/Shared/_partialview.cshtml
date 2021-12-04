@@ -1,0 +1,25 @@
+﻿
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<div class="jumbotron">
+    <h3>Employee List</h3>
+    @{
+        if (TempData["data"] != null)
+        {
+
+            var item = TempData["data"] as MVC_Tutorial_Complete.Models.EmployeeViewModel;
+            <ul class="list-group">
+                <li class="list-group-item">
+                    @item.EmployeeId
+                </li>
+                <li class="list-group-item">@item.EmpName</li>
+                <li class="list-group-item">@item.DepartName</li>
+            </ul>
+        }
+        else
+        {
+            <h4>Sorry! No data found</h4>
+        }
+    }
+
+</div>

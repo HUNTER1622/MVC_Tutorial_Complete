@@ -13,10 +13,10 @@ namespace MVC_Tutorial_Complete.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Mvc_TutorialEntities : DbContext
+    public partial class Mvc_TutorialEntities2 : DbContext
     {
-        public Mvc_TutorialEntities()
-            : base("name=Mvc_TutorialEntities")
+        public Mvc_TutorialEntities2()
+            : base("name=Mvc_TutorialEntities2")
         {
         }
     
@@ -27,5 +27,6 @@ namespace MVC_Tutorial_Complete.Models
     
         public virtual DbSet<Departmnet> Departmnets { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Site> Sites { get; set; }
     }
 }

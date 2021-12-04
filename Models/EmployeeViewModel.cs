@@ -18,5 +18,8 @@ namespace MVC_Tutorial_Complete.Models
         [Required(ErrorMessage = "Enter Address")]
         public string Address { get; set; }
 
+        [Required(ErrorMessage = "Enter Site Name")]
+        public string SiteName { get; set; }
+
     }
 }

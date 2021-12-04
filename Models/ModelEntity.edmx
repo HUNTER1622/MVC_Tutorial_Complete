@@ -22,6 +22,14 @@
           <Property Name="Remember" Type="bit" />
           <Property Name="Address" Type="varchar" MaxLength="225" />
         </EntityType>
+        <EntityType Name="Site">
+          <Key>
+            <PropertyRef Name="SiteId" />
+          </Key>
+          <Property Name="SiteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SiteName" Type="varchar" MaxLength="225" />
+          <Property Name="EmployeeId" Type="int" />
+        </EntityType>
         <Association Name="FK__Employees__Depar__2A4B4B5E">
           <End Role="Departmnets" Type="Self.Departmnets" Multiplicity="0..1" />
           <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
@@ -34,12 +42,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Site__EmployeeId__2D27B809">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="Site" Type="Self.Site" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Site">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Mvc_TutorialModelStoreContainer">
           <EntitySet Name="Departmnets" EntityType="Self.Departmnets" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Site" EntityType="Self.Site" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Employees__Depar__2A4B4B5E" Association="Self.FK__Employees__Depar__2A4B4B5E">
             <End Role="Departmnets" EntitySet="Departmnets" />
             <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Site__EmployeeId__2D27B809" Association="Self.FK__Site__EmployeeId__2D27B809">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Site" EntitySet="Site" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -65,6 +90,16 @@
           <Property Name="Remember" Type="Boolean" />
           <Property Name="Address" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Departmnet" Relationship="Self.FK__Employees__Depar__2A4B4B5E" FromRole="Employees" ToRole="Departmnets" />
+          <NavigationProperty Name="Sites" Relationship="Self.FK__Site__EmployeeId__2D27B809" FromRole="Employees" ToRole="Site" />
+        </EntityType>
+        <EntityType Name="Site">
+          <Key>
+            <PropertyRef Name="SiteId" />
+          </Key>
+          <Property Name="SiteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SiteName" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeId" Type="Int32" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK__Site__EmployeeId__2D27B809" FromRole="Site" ToRole="Employees" />
         </EntityType>
         <Association Name="FK__Employees__Depar__2A4B4B5E">
           <End Role="Departmnets" Type="Self.Departmnet" Multiplicity="0..1" />
@@ -78,12 +113,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Mvc_TutorialEntities" annotation:LazyLoadingEnabled="true">
+        <Association Name="FK__Site__EmployeeId__2D27B809">
+          <End Role="Employees" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="Site" Type="Self.Site" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Site">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Mvc_TutorialEntities2" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Departmnets" EntityType="Self.Departmnet" />
           <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="Sites" EntityType="Self.Site" />
           <AssociationSet Name="FK__Employees__Depar__2A4B4B5E" Association="Self.FK__Employees__Depar__2A4B4B5E">
             <End Role="Departmnets" EntitySet="Departmnets" />
             <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Site__EmployeeId__2D27B809" Association="Self.FK__Site__EmployeeId__2D27B809">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Site" EntitySet="Sites" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -91,7 +143,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Mvc_TutorialModelStoreContainer" CdmEntityContainer="Mvc_TutorialEntities">
+        <EntityContainerMapping StorageEntityContainer="Mvc_TutorialModelStoreContainer" CdmEntityContainer="Mvc_TutorialEntities2">
           <EntitySetMapping Name="Departmnets">
             <EntityTypeMapping TypeName="Mvc_TutorialModel.Departmnet">
               <MappingFragment StoreEntitySet="Departmnets">
@@ -108,6 +160,15 @@
                 <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
                 <ScalarProperty Name="Remember" ColumnName="Remember" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sites">
+            <EntityTypeMapping TypeName="Mvc_TutorialModel.Site">
+              <MappingFragment StoreEntitySet="Site">
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -6,23 +6,110 @@
 
 <h2>FormView</h2>
 
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
-
+<script src="~/Scripts/bootstrap.min.js"></script>
 <div class="container" style="width:50%;margin-top:2%">
-    @using (Html.BeginForm("FormView", "Database", FormMethod.Post))
-    {
-        @Html.DropDownListFor(m => m.DepartmentId, ViewBag.deplist as SelectList, "--Select--", new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.DepartmentId, "", new { @class = "text-danger" })
-        @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @placeholder = "Name", @style = "margin-top:10px;" })
-        @Html.ValidationMessageFor(m => m.EmpName, "", new { @class = "text-danger" })
-        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Address", @style = "margin-top:10px;" })
-        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
-        <div class="checkbox">
-            <label>
-                @Html.CheckBoxFor(m => m.Remember) Check me
-            </label>
-        </div>
-        <input type="submit" class="btn btn-primary btn-block" />
+    <a href="#" class="btn btn-success btn-lg" data-toggle="modal" data-target="#mymodal">Open Modal</a>
+    <div id="mymodal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" data-dismiss="modal" class="close">&times;</a>
+                    <h3 class="modal-title">Save Form</h3>
+                </div>
+                <div class="modal-body">
+                    @*Post data through Jquery Ajax*@
 
-    }
+                    <form id="Myform">
+                        @Html.DropDownListFor(m => m.DepartmentId, ViewBag.deplist as SelectList, "--Select--", new { @class = "form-control" })
+
+
+                        @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @placeholder = "Name", @style = "margin-top:10px;" })
+
+
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Address", @style = "margin-top:10px;" })
+
+
+                        @Html.TextBoxFor(m => m.SiteName, new { @class = "form-control", @placeholder = "Site Name", @style = "margin-top:10px;" })
+
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.Remember) Check me
+                            </label>
+                        </div>
+                        <input type="reset" style="display:none" id="reset" />
+                    </form>
+
+                    <div id="loader" style="text-align:center;display:none">
+                        <img src="~/Content/747.gif" width="150" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="reset" class="btn btn-primary" value="Save" id="btnsubmit" />
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*Method for server side validation and data post through form post*@
+    @*@using (Html.BeginForm("FormView", "Database", FormMethod.Post))
+        {
+            @Html.DropDownListFor(m => m.DepartmentId, ViewBag.deplist as SelectList, "--Select--", new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.DepartmentId, "", new { @class = "text-danger" })
+
+            @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @placeholder = "Name", @style = "margin-top:10px;" })
+            @Html.ValidationMessageFor(m => m.EmpName, "", new { @class = "text-danger" })
+
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Address", @style = "margin-top:10px;" })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+
+            @Html.TextBoxFor(m => m.SiteName, new { @class = "form-control", @placeholder = "Site Name", @style = "margin-top:10px;" })
+            @Html.ValidationMessageFor(m => m.SiteName, "", new { @class = "text-danger" })
+            <div class="checkbox">
+                <label>
+                    @Html.CheckBoxFor(m => m.Remember) Check me
+                </label>
+            </div>
+            <input type="submit" class="btn btn-primary btn-block" />
+
+        }*@
+
 </div>
+
+
+@*Note(Client-Side-Validation)*@
+@*for client side validation yeah jquery ki files include kro or webconfig me jaakr 2 keys check krlo true hn ki nai*@
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnsubmit").click(function () {
+            $("#loader").show();
+            debugger;
+            var data = $("#Myform").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/Database/FormView",
+                data: data,
+                success: function (response) {
+                    debugger;
+                    $("#loader").hide();
+                    $("#mymodal").modal("hide");
+                    $("#reset").click();
+
+                    //alert("Saved Successfully");
+                    //$('form :input').val('');
+                    
+                }
+            })
+        })
+    })
+</script>

@@ -14,6 +14,12 @@ namespace MVC_Tutorial_Complete.Models
     
     public partial class Employee
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Employee()
+        {
+            this.Sites = new HashSet<Site>();
+        }
+    
         public int EmployeeId { get; set; }
         public string EmpName { get; set; }
         public Nullable<int> DepartmentId { get; set; }
@@ -21,5 +27,7 @@ namespace MVC_Tutorial_Complete.Models
         public string Address { get; set; }
     
         public virtual Departmnet Departmnet { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Site> Sites { get; set; }
     }
 }
