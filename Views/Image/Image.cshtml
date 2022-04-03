@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Image";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<div class="row" style="margin-top:200px">
+    <div class="panel thumbnail">
+        <div class="panel-heading">
+            <button class="btn btn-danger btn-block"><input type="file" id="imagedwlnd" /></button>
+           
+        </div>
+        <div class="panel-body " id="previewdiv" style="display:none">
+            <img class="img-responsive" id="targetimage" />
+            <div class="caption"><a href="#" onclick="ClearValue()"><i class="glyphicon glyphicon-trash"></i></a></div>
+            <a href="#" class="btn btn-success btn-sm" onclick="UploadImage()"></a>
+            <p id="description"></p>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#imagedwlnd").change(function () {
+            var File = this.files;
+            if (File && File[0]) {
+                ReadImage(File[0]);
+            }
+        })
+    })
+    var ReadImage = function (file) {
+        var reader = new FileReader;
+        var image = new Image;
+        reader.readAsDataURL(file);
+        reader.onload = function (_files) {
+            image.src = _files.target.result;
+            image.onload = function () {
+                var height = this.height;
+                var width = this.width;
+                var size = ~~(file.size / 1024) + "KB";
+                var type = file.type;
+                $("#targetimage").attr('src', _files.target.result);
+                $("#description").text("Size:" + size + ",Height:" + height + ",Width:" + width + "");
+                $("#previewdiv").show();
+            }
+
+        }
+
+    }
+    var ClearValue = function () {
+        $("#imagedwlnd").val('');
+        $("#description").text('');
+        $("#previewdiv").hide();
+    }
+
+    var UploadImage = function () {
+        var file = $("#imagedwlnd").get(0).files;
+        var data = new FormData;
+        data.append("ImageFile", file[0]);
+        data.append("ProductName", "Shivaay");
+        $.ajax({
+            type: "POST",
+            url: "/Image/Upload",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function () {
+
+            }
+        })
+
+    }
+</script>

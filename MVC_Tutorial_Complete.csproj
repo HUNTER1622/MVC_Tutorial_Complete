@@ -129,11 +129,16 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DatabaseController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Country.cs">
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CountryAndStateViewModel.cs" />
     <Compile Include="Models\Departmnet.cs">
       <DependentUpon>ModelEntity.tt</DependentUpon>
     </Compile>
@@ -141,6 +146,9 @@
       <DependentUpon>ModelEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EmployeeViewModel.cs" />
+    <Compile Include="Models\ImageStoreInDatabase.cs">
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ModelEntity.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -156,18 +164,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelEntity.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductViewModel.cs" />
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Site.cs">
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\State.cs">
+      <DependentUpon>ModelEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserInfo.cs">
       <DependentUpon>ModelEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Method\Methods.cs" />
+    <Compile Include="Services\Services.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\747.gif" />
+    <Content Include="Content\bg4.jpg" />
+    <Content Include="Content\boot.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\e1.jpg" />
+    <Content Include="Scripts\J1.js" />
+    <Content Include="Scripts\J2.js" />
+    <Content Include="Scripts\J3.js" />
     <Content Include="Content\Rolling square.gif" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -224,9 +249,16 @@
     <Content Include="Views\Database\FormView.cshtml" />
     <Content Include="Views\Database\DeleteData.cshtml" />
     <Content Include="Views\Shared\_partialview.cshtml" />
+    <Content Include="Views\Shared\_listheader.cshtml" />
+    <Content Include="Views\Shared\_editform.cshtml" />
+    <Content Include="Views\Image\Index.cshtml" />
+    <Content Include="Views\Image\Image.cshtml" />
+    <Content Include="Views\Image\ImageUpload.cshtml" />
+    <Content Include="Views\Shared\Stateoptionview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="UploadImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

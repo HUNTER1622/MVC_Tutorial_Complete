@@ -28,5 +28,10 @@ namespace MVC_Tutorial_Complete.Models
         public virtual DbSet<Departmnet> Departmnets { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
+        public virtual DbSet<UserInfo> UserInfoes { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<ImageStoreInDatabase> ImageStoreInDatabases { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<State> States { get; set; }
     }
 }

@@ -46,37 +46,34 @@ namespace MVC_Tutorial_Complete.Controllers
         [HttpPost]
         public ActionResult FormView(EmployeeViewModel model)
         {
-            if(ModelState.IsValid==true)
+            try
             {
-                try
-                {
-                    var empmodel = new Employee();
-                    empmodel.EmpName = model.EmpName;
-                    empmodel.DepartmentId = model.DepartmentId;
-                    empmodel.Address = model.Address;
-                    empmodel.Remember = model.Remember;
-                    _db.Employees.Add(empmodel);
-                    _db.SaveChanges();
-                    Site _model = new Site();
-                    _model.SiteName = model.SiteName;
-                    _model.EmployeeId = empmodel.EmployeeId;
-                    _db.Sites.Add(_model);
-                    _db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-            else
-            {
+                ////update code 
+                //{
+                //    //pending
+                //}
                 var data = _db.Departmnets.ToList();
                 ViewBag.deplist = new SelectList(data, "DepartmentId", "DepartName");
-                return View(model);
+                var empmodel = new Employee();
+                empmodel.EmpName = model.EmpName;
+                empmodel.DepartmentId = model.DepartmentId;
+                empmodel.Address = model.Address;
+                empmodel.Remember = model.Remember;
+                _db.Employees.Add(empmodel);
+                _db.SaveChanges();
+                //Site _model = new Site();
+                //_model.SiteName = model.SiteName;
+                //_model.EmployeeId = empmodel.EmployeeId;
+                //_db.Sites.Add(_model);
+                //_db.SaveChanges();
 
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return View(model);
         }
 
         public ActionResult DeleteData()
@@ -110,13 +107,42 @@ namespace MVC_Tutorial_Complete.Controllers
             }
         }
 
-        public ActionResult GetPartialViewById()
+        public ActionResult GetPartialViewById(int id,string type)
         {
-            TempData["data"] = _db.Employees.Where(x => x.EmployeeId == 15).Select(x => new EmployeeViewModel
-            { EmployeeId = 15, EmpName = x.EmpName, DepartName = x.Departmnet.DepartName }).SingleOrDefault();
-            var data = _db.Employees.Where(x => x.EmployeeId == 15).Select(x => new EmployeeViewModel
-            { EmployeeId = 15, EmpName = x.EmpName, DepartName = x.Departmnet.DepartName }).SingleOrDefault();
-            return PartialView("/Views/Shared/_partialview.cshtml");
+            if(id>0 && type=="Details")
+            {
+                //Detail
+                TempData["data"] = GetDataByEmpid(id);
+                return PartialView("/Views/Shared/_partialview.cshtml");
+            }
+            else if(id>0&&type=="Edit")
+            {
+                //Edit
+                var empmodel = GetDataByEmpid(id);
+                Initialize(type);
+                return PartialView("/Views/Shared/_editform.cshtml",empmodel);
+            }
+            else if(id<=0&&type=="Add")
+            {
+                //Add
+                Initialize(type);
+                return PartialView("/Views/Shared/_editform.cshtml");
+            }   
+            else
+            {
+                return PartialView("/Views/Shared/_partialview.cshtml");
+            }
+        }
+        public void Initialize(string type)
+        {
+            var data = _db.Departmnets.ToList();
+            ViewBag.deplist = new SelectList(data, "DepartmentId", "DepartName");
+            ViewBag.type = type;
+        }
+        public EmployeeViewModel GetDataByEmpid(int id)
+        {
+           return _db.Employees.Where(x => x.EmployeeId == id).Select(x => new EmployeeViewModel
+            { EmployeeId = id, EmpName = x.EmpName, DepartName = x.Departmnet.DepartName, DepartmentId = x.DepartmentId }).SingleOrDefault();
         }
 
     }

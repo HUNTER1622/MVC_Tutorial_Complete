@@ -4,48 +4,62 @@
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
 <script src="~/Scripts/bootstrap.min.js"></script>
-<h2>DeleteData</h2>
 
-@Html.Partial("_partialview")
+<div >
+    <div class="row">
+        <div class="col-md-3">
+            <img src="~/Content/bg4.jpg" class="img-responsive"/>
+        </div>
+        <div class="col-md-9 jumbotron">
+            @Html.Partial("_listheader")
+          
+            @if (Model != null)
+            {
+                <table class="table table-striped" style="background-color:lightblue" id="tabledata">
+                    <tr>
+                        <th>Employee Id</th>
+                        <th>Employee Name </th>
+                        <th>Department Name</th>
+                        <th>Action</th>
+                    </tr>
+                    <tbody>
+                        @{
+
+                            foreach (var item in Model)
+                            {
+                                <tr id="row_@item.EmployeeId">
+                                    <td>@item.EmployeeId</td>
+                                    <td>@item.EmpName</td>
+                                    <td>@item.DepartName</td>
+                                    <td>
+                                        <a href="#/" onclick="deleteEmployee(@item.EmployeeId)"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+                                        <a href="#/" onclick="ShowEmployee(@item.EmployeeId,'Edit')"><i class="glyphicon glyphicon-pencil text-success m-2"></i></a>
+                                        <a href="#/" onclick="ShowEmployee(@item.EmployeeId,'Details')"><i class="glyphicon glyphicon-eye-open text-primary m-2"></i></a>
+                                    </td>
+
+                                </tr>
+                            }
+                            //var item = TempData["msg"] as MVC_Tutorial_Complete.Models.EmployeeViewModel;
+
+                        }
+
+                    </tbody>
+                </table>
+                <div id="pview" class="jumbotron" style="display:none"></div>
+            }
+        </div>
+    </div>
+  
 
 
-<div class="container">
-    @if (Model != null)
-    {
-        <table class="table table-striped" style="width:80%">
-            <tr>
-                <th>Employee Id</th>
-                <th>Employee Name </th>
-                <th>Department Id</th>
-                <th>Department Name</th>
-                <th>Action</th>
-            </tr>
-            <tbody>
-                @{
 
-                    foreach (var item in Model)
-                    {
-                        <tr id="row_@item.EmployeeId">
-                            <td>@item.EmployeeId</td>
-                            <td>@item.EmpName</td>
-                            <td>@item.DepartmentId</td>
-                            <td>@item.DepartName</td>
-                            <td><a href="#" onclick="deleteEmployee(@item.EmployeeId)"><i class="glyphicon glyphicon-trash text-danger"></i></a></td>
-                        </tr>
-                    }
-                    //var item = TempData["msg"] as MVC_Tutorial_Complete.Models.EmployeeViewModel;
 
-                }
-
-            </tbody>
-        </table>
-
-    }
+   
 </div>
 
 <div id="Dmodel" class="modal fade" style="display:none">
     <div class="modal-dialog">
-        <input type="hidden" id="storedelid"/>
+        <input type="hidden" id="storedelid" />
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
@@ -65,10 +79,8 @@
 
 
 </div>
-<a href="#/" class="btn btn-primary btn-lg"  onclick="GetDataById()">GetPartialViewByJquery</a>
-<div id="pview" class="jumbotron">
-    
-</div>
+@*<a href="#/" class="btn btn-primary btn-lg" onclick="GetDataById()">GetPartialViewByJquery</a>*@
+
 <script>
     var deleteEmployee = function (id) {
         $("#storedelid").val(id);
@@ -83,35 +95,37 @@
             success: function (response) {
                 if (response.Status) {
                     $("#Dmodel").modal("hide");
-                    $("#row_" + value).remove();                   
-                    
+                    $("#row_" + value).remove();
+
                 }
                 else {
                     $("#Dmodel").modal("hide");
-                    
+
                 }
             }
 
 
         })
     }
-    var GetDataById = function (id) {
-        $.ajax({
-            type: "POST",
-            url: "/Database/GetPartialViewById",
-            //data: { id: id },
-            dataType:'HTML',
-            success: function (response) {
-                debugger;
-                $("#pview").html(response);
-            }
+    //var GetDataById = function (id) {
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Database/GetPartialViewById",
+    //        //data: { id: id },
+    //        success: function (response) {
+    //            $("#pview").html(response);
+    //        }
+    //    })
+
+    //}
+    //$("#pview").load(URL, function () {
+    //    $("#pview").show();
+    //})
+    var ShowEmployee = function (id,type) {
+        var URL = "/Database/GetPartialViewById?id="+id+"&type="+type;
+        $("#pview").load(URL, function () {
+            $("#pview").show();
+            $("#tabledata").hide();
         })
-
     }
-    var URL = "/Database/GetPartialViewById";
-    $("#pview").load(URL,function () {
-
-    })
-
-    
 </script>

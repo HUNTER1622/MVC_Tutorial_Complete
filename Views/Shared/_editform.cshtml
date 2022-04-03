@@ -1,0 +1,53 @@
+﻿@model MVC_Tutorial_Complete.Models.EmployeeViewModel
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<form id="Myform">
+    @Html.TextBoxFor(model => model.EmployeeId, new { @style = "display:none" })
+    @Html.DropDownListFor(m => m.DepartmentId, ViewBag.deplist as SelectList, "--Select--", new { @class = "form-control" })
+    @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @placeholder = "Name", @style = "margin-top:10px;" })
+    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Address", @style = "margin-top:10px;" })
+    @*@Html.TextBoxFor(m => m.SiteName, new { @class = "form-control", @placeholder = "Site Name", @style = "margin-top:10px;" })*@
+
+    @*<div class="checkbox">
+            <label>
+                @Html.CheckBoxFor(m => m.Remember) Check me
+            </label>
+        </div>*@
+    <input type="reset" style="display:none" id="reset" />
+    @if (ViewBag.type == "Edit")
+    {
+        <input type="reset" class="btn btn-primary" value="Update" id="btnupdate" />
+
+    }
+    else
+    {
+        <input type="reset" class="btn btn-primary" value="Save" id="btnsubmit" />
+    }
+
+</form>
+
+<div id="loader" style="text-align:center;display:none">
+    <img src="~/Content/747.gif" width="150" />
+</div>
+<script>
+    $(document).ready(function () {
+        $("#btnsubmit").click(function () {
+            $("#loader").show();
+            var data = $("#Myform").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/Database/FormView",
+                data: data,
+                success: function (response) {
+                    $("#loader").hide();
+                    $("#mymodal").modal("hide");
+                    $("#reset").click();
+                }
+            })
+        })
+    })
+</script>

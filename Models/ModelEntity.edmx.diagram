@@ -10,6 +10,13 @@
         <EntityTypeShape EntityType="Mvc_TutorialModel.Site" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
         <AssociationConnector Association="Mvc_TutorialModel.FK__Employees__Depar__2A4B4B5E" ManuallyRouted="false" />
         <AssociationConnector Association="Mvc_TutorialModel.FK__Site__EmployeeId__2D27B809" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Mvc_TutorialModel.UserInfo" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Mvc_TutorialModel.Role" Width="1.5" PointX="0.75" PointY="8.125" />
+        <AssociationConnector Association="Mvc_TutorialModel.FK__UserInfo__RoleId__38996AB5" />
+        <EntityTypeShape EntityType="Mvc_TutorialModel.ImageStoreInDatabase" Width="1.5" PointX="5.375" PointY="4.75" />
+        <EntityTypeShape EntityType="Mvc_TutorialModel.Country" Width="1.5" PointX="7.375" PointY="1" />
+        <EntityTypeShape EntityType="Mvc_TutorialModel.State" Width="1.5" PointX="9.625" PointY="0.875" />
+        <AssociationConnector Association="Mvc_TutorialModel.FK__States__CountryI__5EBF139D" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

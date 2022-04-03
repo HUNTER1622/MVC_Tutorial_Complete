@@ -1,0 +1,102 @@
+﻿@model MVC_Tutorial_Complete.Models.CountryAndStateViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<div class="jumbotron">
+    <div class="row ">
+        <div class="col-md-6">
+            <div class="img-responsive col-md-12">
+                <img src="~/Content/bg4.jpg" class="img-responsive" style="height:200px;width:400px;margin-top:100px;" />
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <button class="btn btn-success btn-block" style="margin-top:100px">
+                <input type="file" id="Imgfile"/>
+            </button>
+            <div class="col-md-12 thumbnail" style="display:none" id="imgpreview">
+                <img class="img-responsive" id="targetimage" />
+                <div class="caption">
+                    <a href="#" onclick="ClearValue()"><i class="glyphicon glyphicon-trash"></i></a>
+                    <p id="description"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+
+
+        </div>
+    </div>
+    <div class="row">
+        
+        @if(ViewBag.countrylist != null)
+          {
+
+             @Html.DropDownListFor(x=> x.CountryId,ViewBag.countrylist as SelectList,"--Select Country--", new {@class="form-control" })
+
+          }
+        @Html.DropDownListFor(x=>x.StateId,new SelectList(""),"--Select State--", new {@class="form-control"})
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#Imgfile").change(function () {
+           
+            var File = this.files;
+            if (File && File[0]) {
+                ReadImage(File[0]);
+            }
+        })
+    })
+    var ReadImage = function (file) {
+       
+        var reader = new FileReader;
+        var image = new Image;
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+            image.src = _file.target.result;
+            image.onload = function () {
+               
+                var height = this.height;
+                var width = this.width;
+                var type = file.type;
+                var size = ~~(file.size / 1024) + "KB";
+                $("#targetimage").attr('src', _file.target.result);
+                $("#description").text("Size" + size + ",height" + height + ",Width" + width + "");
+                $("#imgpreview").show();
+            }
+            
+
+        }
+    }
+    var ClearValue = function () {
+        $("#Imgfile").val('');
+        $("#description").val('');
+        $("#imgpreview").hide();
+    }
+    $("#CountryId").change(function () {
+        
+        var id = $(this).val();
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Image/GetStateList?CountryId=" + id,
+            success: function (response) {
+                debugger;
+                $("#StateId").empty();
+                $("#StateId").append(response);
+
+
+            }
+            
+
+        })
+    })
+
+</script>

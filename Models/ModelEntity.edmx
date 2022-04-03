@@ -4,7 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Mvc_TutorialModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Mvc_TutorialModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Departmnets">
           <Key>
             <PropertyRef Name="DepartmentId" />
@@ -22,6 +29,23 @@
           <Property Name="Remember" Type="bit" />
           <Property Name="Address" Type="varchar" MaxLength="225" />
         </EntityType>
+        <EntityType Name="ImageStoreInDatabase">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ImageName" Type="varchar" MaxLength="50" />
+          <Property Name="ImageByte" Type="image" />
+          <Property Name="ImagePath" Type="varchar" MaxLength="50" />
+          <Property Name="IsDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Site">
           <Key>
             <PropertyRef Name="SiteId" />
@@ -29,6 +53,25 @@
           <Property Name="SiteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SiteName" Type="varchar" MaxLength="225" />
           <Property Name="EmployeeId" Type="int" />
+        </EntityType>
+        <EntityType Name="States">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="varchar" MaxLength="150" />
+          <Property Name="RoleId" Type="int" />
         </EntityType>
         <Association Name="FK__Employees__Depar__2A4B4B5E">
           <End Role="Departmnets" Type="Self.Departmnets" Multiplicity="0..1" />
@@ -54,10 +97,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__States__CountryI__5EBF139D">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="States" Type="Self.States" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="States">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserInfo__RoleId__38996AB5">
+          <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserInfo">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Mvc_TutorialModelStoreContainer">
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departmnets" EntityType="Self.Departmnets" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ImageStoreInDatabase" EntityType="Self.ImageStoreInDatabase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Site" EntityType="Self.Site" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="States" EntityType="Self.States" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Employees__Depar__2A4B4B5E" Association="Self.FK__Employees__Depar__2A4B4B5E">
             <End Role="Departmnets" EntitySet="Departmnets" />
             <End Role="Employees" EntitySet="Employees" />
@@ -66,9 +138,16 @@
             <End Role="Employees" EntitySet="Employees" />
             <End Role="Site" EntitySet="Site" />
           </AssociationSet>
+          <AssociationSet Name="FK__States__CountryI__5EBF139D" Association="Self.FK__States__CountryI__5EBF139D">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="States" EntitySet="States" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserInfo__RoleId__38996AB5" Association="Self.FK__UserInfo__RoleId__38996AB5">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserInfo" EntitySet="UserInfo" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Mvc_TutorialModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -137,7 +216,91 @@
             <End Role="Employees" EntitySet="Employees" />
             <End Role="Site" EntitySet="Sites" />
           </AssociationSet>
+          <EntitySet Name="UserInfoes" EntityType="Mvc_TutorialModel.UserInfo" />
+          <EntitySet Name="Roles" EntityType="Mvc_TutorialModel.Role" />
+          <AssociationSet Name="FK__UserInfo__RoleId__38996AB5" Association="Mvc_TutorialModel.FK__UserInfo__RoleId__38996AB5">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserInfo" EntitySet="UserInfoes" />
+          </AssociationSet>
+          <EntitySet Name="ImageStoreInDatabases" EntityType="Mvc_TutorialModel.ImageStoreInDatabase" />
+          <EntitySet Name="Countries" EntityType="Mvc_TutorialModel.Country" />
+          <EntitySet Name="States" EntityType="Mvc_TutorialModel.State" />
+          <AssociationSet Name="FK__States__CountryI__5EBF139D" Association="Mvc_TutorialModel.FK__States__CountryI__5EBF139D">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="State" EntitySet="States" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="RoleId" Type="Int32" />
+          <NavigationProperty Name="Role" Relationship="Mvc_TutorialModel.FK__UserInfo__RoleId__38996AB5" FromRole="UserInfo" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserInfoes" Relationship="Mvc_TutorialModel.FK__UserInfo__RoleId__38996AB5" FromRole="Role" ToRole="UserInfo" />
+        </EntityType>
+        <Association Name="FK__UserInfo__RoleId__38996AB5">
+          <End Type="Mvc_TutorialModel.Role" Role="Role" Multiplicity="0..1" />
+          <End Type="Mvc_TutorialModel.UserInfo" Role="UserInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserInfo">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ImageStoreInDatabase">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImageName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ImageByte" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ImagePath" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="States" Relationship="Mvc_TutorialModel.FK__States__CountryI__5EBF139D" FromRole="Country" ToRole="State" />
+        </EntityType>
+        <EntityType Name="State">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CountryId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Mvc_TutorialModel.FK__States__CountryI__5EBF139D" FromRole="State" ToRole="Country" />
+        </EntityType>
+        <Association Name="FK__States__CountryI__5EBF139D">
+          <End Type="Mvc_TutorialModel.Country" Role="Country" Multiplicity="0..1" />
+          <End Type="Mvc_TutorialModel.State" Role="State" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="State">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -169,6 +332,54 @@
                 <ScalarProperty Name="SiteId" ColumnName="SiteId" />
                 <ScalarProperty Name="SiteName" ColumnName="SiteName" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserInfoes">
+            <EntityTypeMapping TypeName="Mvc_TutorialModel.UserInfo">
+              <MappingFragment StoreEntitySet="UserInfo">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="Mvc_TutorialModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImageStoreInDatabases">
+            <EntityTypeMapping TypeName="Mvc_TutorialModel.ImageStoreInDatabase">
+              <MappingFragment StoreEntitySet="ImageStoreInDatabase">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+                <ScalarProperty Name="ImageByte" ColumnName="ImageByte" />
+                <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="Mvc_TutorialModel.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="States">
+            <EntityTypeMapping TypeName="Mvc_TutorialModel.State">
+              <MappingFragment StoreEntitySet="States">
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

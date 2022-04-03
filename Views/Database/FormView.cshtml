@@ -1,7 +1,6 @@
 ﻿@model MVC_Tutorial_Complete.Models.EmployeeViewModel
 @{
     ViewBag.Title = "FormView";
-    Layout = null;
 }
 
 <h2>FormView</h2>
@@ -11,6 +10,8 @@
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
 <script src="~/Scripts/bootstrap.min.js"></script>
+
+
 <div class="container" style="width:50%;margin-top:2%">
     <a href="#" class="btn btn-success btn-lg" data-toggle="modal" data-target="#mymodal">Open Modal</a>
     <div id="mymodal" class="modal fade">
@@ -25,16 +26,16 @@
 
                     <form id="Myform">
                         @Html.DropDownListFor(m => m.DepartmentId, ViewBag.deplist as SelectList, "--Select--", new { @class = "form-control" })
-
+                        @Html.ValidationMessageFor(m => m.DepartmentId, "", new { @class = "text-danger" })
 
                         @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @placeholder = "Name", @style = "margin-top:10px;" })
-
+                        @Html.ValidationMessageFor(m => m.EmpName, "", new { @class = "text-danger" })
 
                         @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Address", @style = "margin-top:10px;" })
-
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
 
                         @Html.TextBoxFor(m => m.SiteName, new { @class = "form-control", @placeholder = "Site Name", @style = "margin-top:10px;" })
-
+                        @Html.ValidationMessageFor(m => m.SiteName, "", new { @class = "text-danger" })
                         <div class="checkbox">
                             <label>
                                 @Html.CheckBoxFor(m => m.Remember) Check me
@@ -87,29 +88,35 @@
 @*Note(Client-Side-Validation)*@
 @*for client side validation yeah jquery ki files include kro or webconfig me jaakr 2 keys check krlo true hn ki nai*@
 
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#btnsubmit").click(function () {
-            $("#loader").show();
-            debugger;
-            var data = $("#Myform").serialize();
-            $.ajax({
-                type: "POST",
-                url: "/Database/FormView",
-                data: data,
-                success: function (response) {
-                    debugger;
-                    $("#loader").hide();
-                    $("#mymodal").modal("hide");
-                    $("#reset").click();
 
-                    //alert("Saved Successfully");
-                    //$('form :input').val('');
-                    
-                }
-            })
+<script>
+    //$("#Myform").valid();
+
+    $("#btnsubmit").click(function () {
+        $("#loader").show();
+        var data = $("#Myform").serialize();
+        if (!$("#Myform").valid()) {
+            return false;
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Database/FormView",
+            data: data,
+            success: function (response) {
+                debugger;
+                $("#loader").hide();
+                $("#mymodal").modal("hide");
+                $("#reset").click();
+
+                //alert("Saved Successfully");
+                //$('form :input').val('');
+
+            }
         })
     })
+    //$(document).ready(function () {
+        
+    //})
 </script>

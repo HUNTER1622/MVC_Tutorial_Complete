@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "ImageUpload";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<div class="jumbotron" style="margin-top:100px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button class="btn btn-success btn-block"><input type="file" id="Imagefile" multiple /></button>
+            <input type="text" class="form-control " id="Url" style="margin:20px;" />
+            <button class="btn btn-success btn-block" id="downloadbutton">Download URL</button>
+        </div>
+        <div class="panel-body" style="display:none" id="ImageBox">
+            <img class="img-responsive" id="targetImage" />
+            <h4>Description:<span id="description"></span></h4>
+            <button id="fileupload" class="btn btn-sm btn-danger">Upload File</button>
+        </div>
+        <div class="panel-footer" id="panelfooter" style="display:none">
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#Imagefile").change(function () {
+        var File = this.files;
+        if (File && File[0]) {
+            ReadImage(File[0]);
+        }
+    })
+    var ReadImage = function (file) {
+        var reader = new FileReader;
+        var image = new Image;
+        reader.readAsDataURL(file);
+        reader.onload = function (_files) {
+            image.src = _files.target.result;
+            image.onload = function () {
+                var height = this.height;
+                var width = this.width;
+                var size = ~~(file.size / 1024) + "KB";
+                var type = file.type;
+                $("#targetImage").attr('src', _files.target.result);
+                $("#description").text("Size in KB " + size +    ",Height:" + height +    ",Width" + width + "");
+                $("#ImageBox").show();
+            }
+
+        }
+    }
+    var clearpreview = function () {
+        $("#targetImage").val('');
+        $("#ImageBox").hide();
+    }
+
+    $("#fileupload").click(function () {
+        var imgdata = $("#Imagefile").get(0).files;
+        var data = new FormData;
+        data.append("ImageFile", imgdata[0]);
+        data.append("ProductName", "MyImage");
+        $.ajax({
+            type: "POST",
+            url: "/Image/Uploading",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (imgid) {
+                if (imgid>0) {
+                    //clearpreview();
+                    $("#panelfooter").append('<img src="/Image/RetrieveImage?Imgid=' + imgid + '" class="img-responsive thumbnail"/>', '<h4>Uploaded sucessfully...</h4>');
+                    $("#panelfooter").show();
+                }
+                else {
+                    alert("Uploading Failed......");
+                }
+            }
+        })
+    })
+    $("#downloadbutton").click(function () {
+        var url = $("#Url").val();
+        var data = new FormData;
+        data.append("ImageUrl", url);
+        data.append("ProductName","DImage")
+        $.ajax({
+            type: "POST",
+            url: "/Image/Uploading",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (imgid) {
+                if (imgid > 0) {
+                    //clearpreview();
+                    $("#panelfooter").append('<img src="/Image/RetrieveImage?Imgid=' + imgid + '" class="img-responsive thumbnail"/>', '<h4>Uploaded sucessfully...</h4>');
+                    $("#panelfooter").show();
+                }
+                else {
+                    alert("Uploading Failed......");
+                }
+            }
+        })
+    })
+</script>
