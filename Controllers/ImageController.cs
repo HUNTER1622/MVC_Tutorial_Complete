@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
 namespace MVC_Tutorial_Complete.Controllers
 {
+    [RoutePrefix("home")]
     public class ImageController : Controller
     {
         Mvc_TutorialEntities2 _db = new Mvc_TutorialEntities2();
@@ -16,6 +19,18 @@ namespace MVC_Tutorial_Complete.Controllers
         public ActionResult Index()
         {
             ViewBag.countrylist = new SelectList(GetCountryList(),"CountryId","CountryName");
+            ViewBag.employeelist = GetEmployees();
+            List<CheckboxItems> cblist = new List<CheckboxItems>();
+            cblist.Add(new CheckboxItems() { ItemId = 1, ItemName = "Dosa", IsAvailable = true });
+            cblist.Add(new CheckboxItems() { ItemId = 2, ItemName = "chowmein", IsAvailable = false });
+            cblist.Add(new CheckboxItems() { ItemId = 3, ItemName = "special masala dosa", IsAvailable = true });
+            cblist.Add(new CheckboxItems() { ItemId = 4, ItemName = "Uttpam", IsAvailable = false });
+            cblist.Add(new CheckboxItems() { ItemId = 5, ItemName = "sambar", IsAvailable = true });
+            cblist.Add(new CheckboxItems() { ItemId = 6, ItemName = "Idli", IsAvailable = false });
+            ViewBag.Itemlist = cblist;
+
+
+
             return View();
         }
         public ActionResult Image()
@@ -121,6 +136,103 @@ namespace MVC_Tutorial_Complete.Controllers
             ViewBag.statelist = new SelectList(statelist, "StateId", "StateName");
             return PartialView("Stateoptionview");
             
+        }
+        public List<EmployeeViewModel> GetEmployees()
+        {
+            var elist = _db.Employees.Select(x => new EmployeeViewModel() { EmployeeId = x.EmployeeId, EmpName = x.EmpName, Address = x.Address, DepartName = x.Departmnet.DepartName }).ToList();
+            return elist;
+        }
+
+        public ActionResult GetListBySearchText(string Searchtext)
+        {
+            var elist = _db.Employees.Where(x => x.EmpName.Contains(Searchtext) || x.Departmnet.DepartName.Contains(Searchtext)).
+                Select(x => new EmployeeViewModel()
+                { EmployeeId = x.EmployeeId, EmpName = x.EmpName, Address = x.Address, DepartName = x.Departmnet.DepartName }).ToList();
+            return PartialView("SearchedEmployeeListViewModel", elist);
+        }
+
+        [Route("Students")]
+        public string GetStudent()
+        {
+            return "All Student";
+        }
+        [Route("Students/{id}")]
+        public string GetStudentById(int id)
+        {
+            return "student by Id" + id;
+        }
+        // optional parameter 
+        // [Route("Students/Name/{Name?}")]
+        // default parameter 
+        // [Route("Students/Name/{Name=ashsish}")]
+        [HttpPost]
+        public JsonResult SaveList(string[] itemlist)
+        {
+            //string[] ids = itemlist.Split(',');
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public JsonResult GetItemlist (string itemtext)
+        {
+            List<CheckboxItems> cblist = new List<CheckboxItems>();
+            cblist.Add(new CheckboxItems() { ItemId = 1, ItemName = "Dosa", IsAvailable = true });
+            cblist.Add(new CheckboxItems() { ItemId = 2, ItemName = "chowmein", IsAvailable = false });
+            cblist.Add(new CheckboxItems() { ItemId = 3, ItemName = "special masala dosa", IsAvailable = true });
+            cblist.Add(new CheckboxItems() { ItemId = 4, ItemName = "Uttpam", IsAvailable = false });
+            cblist.Add(new CheckboxItems() { ItemId = 5, ItemName = "sambar", IsAvailable = true });
+            cblist.Add(new CheckboxItems() { ItemId = 6, ItemName = "Idli", IsAvailable = false });
+            var list = cblist.Where(x => x.ItemName.ToLower().Contains(itemtext.ToLower())).Select(x =>x.ItemName).ToList();
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult SendEmailToClient()
+        {
+            var IsSent =  SendEmail("s.shivamjha98@gmail.com", "<p>Hi Shivam<br />This mail is for sending Purpose <br />Regards </p>", "Testing Email");
+            return Json(IsSent, JsonRequestBehavior.AllowGet);
+
+        }
+        public bool SendEmail(string ToEmail,string Body,string Subject)
+        {
+            
+            try
+            {
+                var SenderEmail = System.Configuration.ConfigurationManager.AppSettings["SenderEmail"].ToString();
+                var Senderpassword = System.Configuration.ConfigurationManager.AppSettings["SenderPassword"].ToString();
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(SenderEmail, Senderpassword);
+                MailMessage mail = new MailMessage(SenderEmail, ToEmail, Subject, Body);
+                mail.IsBodyHtml = true;
+                mail.BodyEncoding = UTF8Encoding.UTF8;
+                client.Send(mail); //Go to mail security setting switch off 2-factor authentication and enable less secured apps then u can send mail
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            
+
+
+        }
+
+        public JsonResult GetTableDataForEmployees(DataTablesParams data)
+        {
+            List<EmployeeViewModel> _emp = new List<EmployeeViewModel>();
+            _emp = _db.Employees.Select(x => new EmployeeViewModel {EmpName=x.EmpName,EmployeeId=x.EmployeeId,DepartmentId=x.Departmnet.DepartmentId,DepartName=x.Departmnet.DepartName,Address=x.Address }).ToList();
+            return Json(new { 
+            aaData = _emp,
+            sEcho = data.sEcho,
+            iTotalDisplayRecords = _emp.Count(),
+            iTotalRecords = _emp.Count()
+            }, JsonRequestBehavior.AllowGet);
+
         }
     }
 }

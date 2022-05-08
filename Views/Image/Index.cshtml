@@ -1,13 +1,44 @@
 ﻿@model MVC_Tutorial_Complete.Models.CountryAndStateViewModel
 @{
     ViewBag.Title = "Index";
+    
 }
+<div class="jumbotron bg-dark">
+    <div class="row">
+        <ul class="list-group mt-4" id="sortableimages" style="cursor:move">
+            <li class="list-group-item col-md-4">
+                <div>
+                    <img src="~/Content/Images/d1.jpg" class="img-responsive" />
+                </div>
+            </li>
+            <li class="list-group-item col-md-4">
+                <div>
+                    <img src="~/Content/Images/d2.jpg" class="img-responsive" />
+                </div>
+            </li>
+            <li class="list-group-item col-md-4">
+                <div>
+                    <img src="~/Content/Images/d3.jpg" class="img-responsive" />
+                </div>
+            </li>
+            <li class="list-group-item col-md-4">
+                <div>
+                    <img src="~/Content/Images/d4.jpg" class="img-responsive" />
+                </div>
+            </li>
+            <li class="list-group-item col-md-4">
+                <div>
+                    <img src="~/Content/Images/e1.jpg" class="img-responsive" />
+                </div>
+            </li>
+            <li class="list-group-item col-md-4">
+                <div>
+                    <img src="~/Content/Images/p1.jpg" class="img-responsive" />
+                </div>
+            </li>
 
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<link href="~/Content/bootstrap.css" rel="stylesheet" />
-<script src="~/Scripts/bootstrap.min.js"></script>
-
-<div class="jumbotron">
+        </ul>
+    </div>
     <div class="row ">
         <div class="col-md-6">
             <div class="img-responsive col-md-12">
@@ -16,7 +47,7 @@
         </div>
         <div class="col-md-6 mt-4">
             <button class="btn btn-success btn-block" style="margin-top:100px">
-                <input type="file" id="Imgfile"/>
+                <input type="file" id="Imgfile" />
             </button>
             <div class="col-md-12 thumbnail" style="display:none" id="imgpreview">
                 <img class="img-responsive" id="targetimage" />
@@ -32,21 +63,181 @@
         </div>
     </div>
     <div class="row">
-        
-        @if(ViewBag.countrylist != null)
-          {
 
-             @Html.DropDownListFor(x=> x.CountryId,ViewBag.countrylist as SelectList,"--Select Country--", new {@class="form-control" })
+        @if (ViewBag.countrylist != null)
+        {
 
-          }
-        @Html.DropDownListFor(x=>x.StateId,new SelectList(""),"--Select State--", new {@class="form-control"})
+            @Html.DropDownListFor(x => x.CountryId, ViewBag.countrylist as SelectList, "--Select Country--", new { @class = "form-control" })
+
+        }
+        @Html.DropDownListFor(x => x.StateId, new SelectList(""), "--Select State--", new { @class = "form-control" })
 
     </div>
+    <div class="row">
+        <input type="text" class="form-control" id="searchtext" placeholder="Search" />
+        @if (ViewBag.employeelist != null)
+        {
+            <table class="table table-striped" id="datatabletable">
+                <tr>
+                    <th>EmployeeId</th>
+                    <th>Employee Name</th>
+                    <th>Employee Address</th>
+                    <th>Employee Department</th>
+                    <th>Action</th>
+                </tr>
+                <tbody id="SearchTable">
+                    @foreach (var item in ViewBag.employeelist)
+                    {
+                        <tr>
+                            <td>
+                                @item.EmployeeId
+                            </td>
+                            <td>
+                                @item.EmpName
+                            </td>
+                            <td>
+                                @item.Address
+                            </td>
+                            <td>
+                                @item.DepartName
+                            </td>
+                            <td>
+                                <a href=""><i class="glyphicon glyphicon-eye-open">View</i></a>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+
+            </table>
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group" id="itemlist">
+                @foreach (var item in ViewBag.Itemlist)
+                {
+                    <li class=" list-group-item ">
+                        <input type="checkbox" id="check_@item.ItemId" checked="@item.IsAvailable" />
+                        <label for="check_@item.ItemId">@item.ItemName</label>
+                    </li>
+                }
+                <div class="list-group-item">
+                    <button class="btn btn-success btn-block" onclick="savelist()">Update</button>
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <input type="text" class="form-control" id="textboxautocomplete" />
+        <br />
+        <a class="btn btn-primary" onclick="SendEmail()">Send Mail</a>
+    </div>
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <th>EmpName</th>
+                <th>EmployeeId</th>
+                <th>DepartmentId</th>
+                <th>DepartName</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+        </tbody>
+    </table>
+
 </div>
+<script src="~/Scripts/new.js"></script>
 <script>
+
+
+    var SendEmail = function () {
+        $.ajax({
+            type: "POST",
+            url: "/Image/SendEmailToClient",
+            success: function (response) {
+                //code
+            }
+        })
+    }
+
+
+
+
+    $("#textboxautocomplete").autocomplete({
+        // source: ["apple","mango","banana","grapes","tomato"] source always contain an array;
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/Image/GetItemlist",
+                data: { itemtext: request.term },
+                success: function (data) {
+                    debugger;
+                    response($.map(data, function (item) {
+
+                        return { label: item, value: item }
+
+                    }))
+
+
+
+                }
+            })
+        }
+
+    });
+
+
+
+
+
+    $("#sortableimages").sortable({
+        update: function () {
+            alert("Hii shivam I am working fine");
+        }
+    })
+
+
+
+    var savelist = function () {
+        var idsarray = [];
+        var arraywithcomma = [];
+        $("#itemlist li input[type=checkbox]").each(function (index, val) {
+            debugger;
+            var id = $(val).attr("id");
+            var splitarray = id.split("_");
+            var originalid = splitarray[1];
+            var ischecked = $("#" + id).is(":checked", true);
+            if (ischecked) {
+                idsarray.push(originalid);
+            }
+        })
+        if (idsarray.length > 0) {
+            arraywithcomma = idsarray.toString();
+            $.ajax({
+                type: "POST",
+                url: "/Image/SaveList",
+                data: { itemlist: idsarray },
+                success: function (response) {
+                    //code
+
+                }
+            })
+        }
+    }
+
+
+
+
+
+
+
+
     $(document).ready(function () {
         $("#Imgfile").change(function () {
-           
+
             var File = this.files;
             if (File && File[0]) {
                 ReadImage(File[0]);
@@ -54,7 +245,7 @@
         })
     })
     var ReadImage = function (file) {
-       
+
         var reader = new FileReader;
         var image = new Image;
 
@@ -62,7 +253,7 @@
         reader.onload = function (_file) {
             image.src = _file.target.result;
             image.onload = function () {
-               
+
                 var height = this.height;
                 var width = this.width;
                 var type = file.type;
@@ -71,7 +262,7 @@
                 $("#description").text("Size" + size + ",height" + height + ",Width" + width + "");
                 $("#imgpreview").show();
             }
-            
+
 
         }
     }
@@ -81,7 +272,7 @@
         $("#imgpreview").hide();
     }
     $("#CountryId").change(function () {
-        
+
         var id = $(this).val();
         debugger;
         $.ajax({
@@ -89,14 +280,34 @@
             url: "/Image/GetStateList?CountryId=" + id,
             success: function (response) {
                 debugger;
-                $("#StateId").empty();
-                $("#StateId").append(response);
+                //$("#StateId").empty();
+                //$("#StateId").append(response);
+                $("#StateId").html(response);
 
 
             }
-            
+
 
         })
     })
 
+    $(document).ready(function () {
+        $("#searchtext").keyup(function () {
+            debugger;
+            var saerchtext = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Image/GetListBySearchText?Searchtext=" + saerchtext,
+                success: function (response) {
+                    debugger;
+                    $("#SearchTable").html(response);
+
+                }
+
+
+            })
+
+        })
+
+    })
 </script>
