@@ -222,17 +222,54 @@ namespace MVC_Tutorial_Complete.Controllers
 
         }
 
-        public JsonResult GetTableDataForEmployees(DataTablesParams data)
+        public JsonResult GetTableDataForEmployees(DataTablesParams data,string Ename)
         {
             List<EmployeeViewModel> _emp = new List<EmployeeViewModel>();
-            _emp = _db.Employees.Select(x => new EmployeeViewModel {EmpName=x.EmpName,EmployeeId=x.EmployeeId,DepartmentId=x.Departmnet.DepartmentId,DepartName=x.Departmnet.DepartName,Address=x.Address }).ToList();
-            return Json(new { 
-            aaData = _emp,
-            sEcho = data.sEcho,
-            iTotalDisplayRecords = _emp.Count(),
-            iTotalRecords = _emp.Count()
-            }, JsonRequestBehavior.AllowGet);
 
+            int pageNo = 1;
+            int totalCount = 0;
+            if(data.iDisplayStart >= data.iDisplayLength)
+            {
+                pageNo = (data.iDisplayStart / data.iDisplayLength) + 1;
+            }
+            if(data.sSearch != null)
+            {
+                totalCount = _db.Employees.Where(x => x.EmpName.Contains(data.sSearch) || x.Departmnet.DepartName.Contains(data.sSearch) || x.Address.Contains(data.sSearch)).Count();
+                _emp = _db.Employees.Where(x=>x.EmpName.Contains(data.sSearch)||x.Departmnet.DepartName.Contains(data.sSearch)||x.Address.Contains(data.sSearch)).OrderBy(x=>x.EmployeeId)
+                    .Skip((pageNo-1)*data.iDisplayLength).Take(data.iDisplayLength).Select(x => new EmployeeViewModel { EmpName = x.EmpName, EmployeeId = x.EmployeeId, DepartmentId = x.Departmnet.DepartmentId, DepartName = x.Departmnet.DepartName, Address = x.Address }).ToList();
+                return Json(new
+                {
+                    aaData = _emp,
+                    sEcho = data.sEcho,
+                    iTotalDisplayRecords = totalCount,
+                    iTotalRecords = totalCount
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else if (Ename != null)
+            {
+                totalCount = _db.Employees.Where(x => x.EmpName.Contains(Ename)).Count();
+                _emp = _db.Employees.Where(x => x.EmpName.Contains(Ename)).OrderBy(x => x.EmployeeId)
+                    .Skip((pageNo - 1) * data.iDisplayLength).Take(data.iDisplayLength).Select(x => new EmployeeViewModel { EmpName = x.EmpName, EmployeeId = x.EmployeeId, DepartmentId = x.Departmnet.DepartmentId, DepartName = x.Departmnet.DepartName, Address = x.Address }).ToList();
+                return Json(new
+                {
+                    aaData = _emp,
+                    sEcho = data.sEcho,
+                    iTotalDisplayRecords = totalCount,
+                    iTotalRecords = totalCount
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                totalCount = _db.Employees.Count();
+                _emp = _db.Employees.OrderBy(x=>x.EmployeeId).Skip((pageNo-1)*data.iDisplayLength).Take(data.iDisplayLength).Select(x => new EmployeeViewModel { EmpName = x.EmpName, EmployeeId = x.EmployeeId, DepartmentId = x.Departmnet.DepartmentId, DepartName = x.Departmnet.DepartName, Address = x.Address }).ToList();
+                return Json(new
+                {
+                    aaData = _emp,
+                    sEcho = data.sEcho,
+                    iTotalDisplayRecords = totalCount,
+                    iTotalRecords = totalCount
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
